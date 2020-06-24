@@ -6,8 +6,8 @@
      Date:           18-Dec-2019
 
      History:
-     When           Who                 What
-
+     When           Who                                     What
+     24-Jun-2020    Steve Jenkins (Azimuth DS LLC)          Added dynamic test data (Contact) creation to allow deployment in Production orgs
      TODO:
  */
 
@@ -18,9 +18,10 @@ public with sharing class qsyd_InvocableEmailTemplateActionTest {
     private static final String CONTACT = 'Contact';
     private static final String USER = 'User';
 
-    private static final String CONTACT_EXAMPLE = '0034P00002PYwXAQA1';
+    private static String CONTACT_EXAMPLE = '0034P00002PYwXAQA1';
 
     static EmailTemplate emailTemplate;
+    static Contact emailContact;
 
     @TestSetup
     private static void setupTestData() {
@@ -44,6 +45,11 @@ public with sharing class qsyd_InvocableEmailTemplateActionTest {
 
     @IsTest
     private static void given_requiredEmailParametersAreProvided_when_anEmailIsInstantiated_then_anEmailIsSent() {
+         // 06242020 - Azimuth DS LLC - STJ -- Create Contact record begin
+        emailContact = new Contact(FirstName = 'Test', LastName = 'Contact', Email = 'plucas@salesforce.com');
+        insert emailContact;
+        CONTACT_EXAMPLE = emailContact.Id;
+         // 06242020 - Azimuth DS LLC - STJ -- Create Contact record end
         qsyd_InvocableEmailTemplateAction.InvocableEmailParam param = new qsyd_InvocableEmailTemplateAction.InvocableEmailParam();
         List<qsyd_InvocableEmailTemplateAction.InvocableEmailParam> params = new List<qsyd_InvocableEmailTemplateAction.InvocableEmailParam>();
 
