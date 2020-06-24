@@ -6,8 +6,8 @@
      Date:           18-Nov-2018
 
      History:
-     When           Who                 What
-
+     When           Who                                     What
+     24-Jun-2020    Steve Jenkins (Azimuth DS LLC)          Added dynamic test data (Contact, ContentVersion,Case, Org-Wide Email Address) creation to allow deployment in Production orgs
      TODO:
  */
 
@@ -22,7 +22,7 @@ public with sharing class qsyd_InvocableEmailBaseTest {
 
     private static final String CASE_EXAMPLE = '5004P00000XFXikQAH';
     private static final String EMAIL_EXAMPLE = '02s4P00000hQIpzQAG';
-    private static final String ORGWIDEEMAILADDRESS_EXAMPLE = '0D24P000002AHEMSA4';
+    private static  String ORGWIDEEMAILADDRESS_EXAMPLE = '0D24P000002AHEMSA4';
 
 
     @TestSetup
@@ -37,8 +37,12 @@ public with sharing class qsyd_InvocableEmailBaseTest {
     @IsTest
     private static void given_staticMethodsAreCalled_when_parametersArePassed_then_parametersArePassedThrough() {
 
-        initialiseSetupTestData();
-
+		// 06242020 - Azimuth DS LLC - STJ -- Retrieve Org-Wide Email Address to use in test begin
+        List<OrgWideEmailAddress> orgAddressList = [select id, Address, DisplayName from OrgWideEmailAddress];
+        system.debug(orgAddressList.size());
+        ORGWIDEEMAILADDRESS_EXAMPLE = orgAddressList.size() > 0 ? orgAddressList[0].Address : ORGWIDEEMAILADDRESS_EXAMPLE;
+        // 06242020 - Azimuth DS LLC - STJ -- Retrieve Org-Wide Email Address to use in test end
+        // 
         Test.startTest();
 
         qsyd_InvocableEmailBase.newEmailMessage(false);
